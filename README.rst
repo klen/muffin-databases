@@ -26,6 +26,8 @@ Requirements
 
 - python >= 3.7
 
+.. note:: The plugin supports only asyncio evenloop (not trio)
+
 .. _installation:
 
 Installation
