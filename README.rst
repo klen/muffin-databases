@@ -89,11 +89,12 @@ The Muffin-Databases plugin is based on databases_. See the databases_'s docs fo
 Options
 -------
 
-Format: ``Name`` -- Description (``default value``)
-
-``url`` -- A database connection URL (``sqlite:///db.sqlite``)
-
-``params`` -- A database connection params (``{}``)
+=========================== ======================================= =========================== 
+Name                        Default value                           Desctiption
+--------------------------- --------------------------------------- ---------------------------
+**url**                     ``"sqlite:///db.sqlite"``               A database connection URL
+**params**                  ``{}``                                  A database connection params
+=========================== ======================================= =========================== 
 
 
 You are able to provide the options when you are initiliazing the plugin:
@@ -102,6 +103,13 @@ You are able to provide the options when you are initiliazing the plugin:
 
     db.setup(app, url='postgresql://localhost/example', params={'ssl': True, 'min_size': 5, 'max_size': 20})
 
+Or setup it from ``Muffin.Application`` configuration using the ``DATABASES_`` prefix:
+
+.. code-block:: python
+
+   DATABASES_URL = 'postgresql://localhost/example'
+
+``Muffin.Application`` configuration options are case insensitive
 
 .. _bugtracker:
 
