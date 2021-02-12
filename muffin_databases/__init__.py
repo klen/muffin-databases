@@ -36,6 +36,6 @@ class Plugin(BasePlugin):
         """Disconnect the database."""
         await self.__database__.disconnect()
 
-    def __getattr__(self, name):
+    def __getattr__(self, name) -> t.Any:
         """Proxy attributes to self database."""
         return getattr(self.__database__, name)
