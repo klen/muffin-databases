@@ -6,7 +6,7 @@ from databases import Database
 from muffin.plugin import BasePlugin
 
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 __project__ = "muffin-databases"
 __author__ = "Kirill Klenov <horneds@gmail.com>"
 __license__ = "MIT"
