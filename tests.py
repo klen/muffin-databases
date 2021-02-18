@@ -17,7 +17,7 @@ async def test_db_sqlite(app, client):
     await db.connect()
     await db.execute('create table nums (id integer primary key, value integer)')
 
-    @app.route(r'/value/<num:int>')
+    @app.route(r'/value/{num:int}')
     async def value(request):
         num = request.path_params['num']
         return await db.fetch_val(f'SELECT {num}')
@@ -26,7 +26,7 @@ async def test_db_sqlite(app, client):
     assert res.status_code == 200
     assert await res.json() == 42
 
-    @app.route(r'/insert/<num:int>')
+    @app.route(r'/insert/{num:int}')
     async def insert(request):
         num = request.path_params['num']
         return await db.execute(f'insert into nums (value) values ({num})')
