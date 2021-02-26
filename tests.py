@@ -3,11 +3,16 @@ import pytest
 
 
 @pytest.fixture
+def aiolib():
+    """Asycio only."""
+    return 'asyncio'
+
+
+@pytest.fixture
 def app():
     return muffin.Application('example', debug=True)
 
 
-@pytest.mark.asyncio
 async def test_db_sqlite(app, client):
     from muffin_databases import Plugin as DB
 
@@ -51,7 +56,6 @@ async def test_db_sqlite(app, client):
     await db.disconnect()
 
 
-@pytest.mark.asyncio
 async def test_example_from_readme(app, client):
     from muffin_databases import Plugin as DB
 
