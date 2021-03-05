@@ -10,7 +10,7 @@ def aiolib():
 
 @pytest.fixture
 def app():
-    return muffin.Application('example', debug=True)
+    return muffin.Application(debug=True)
 
 
 async def test_db_sqlite(app, client):
