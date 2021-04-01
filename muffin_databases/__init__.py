@@ -38,4 +38,7 @@ class Plugin(BasePlugin):
 
     def __getattr__(self, name) -> t.Any:
         """Proxy attributes to self database."""
+        if not self.installed:
+            raise AttributeError(name)
+
         return getattr(self.__database__, name)

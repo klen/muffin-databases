@@ -13,10 +13,19 @@ def app():
     return muffin.Application(debug=True)
 
 
-async def test_db_sqlite(app, client):
-    from muffin_databases import Plugin as DB
+def test_plugin():
+    from muffin_databases import Plugin
 
-    db = DB(app, url='sqlite:///:memory:', params={'force_rollback': True})
+    db = Plugin(url='sqlite:///:memory:', params={'force_rollback': True})
+
+    with pytest.raises(AttributeError):
+        db.unknown
+
+
+async def test_db_sqlite(app, client):
+    from muffin_databases import Plugin
+
+    db = Plugin(app, url='sqlite:///:memory:', params={'force_rollback': True})
     assert db
 
     await db.connect()
@@ -57,9 +66,9 @@ async def test_db_sqlite(app, client):
 
 
 async def test_example_from_readme(app, client):
-    from muffin_databases import Plugin as DB
+    from muffin_databases import Plugin
 
-    db = DB(app, url='sqlite:///:memory:', params={'force_rollback': True})
+    db = Plugin(app, url='sqlite:///:memory:', params={'force_rollback': True})
 
     await db.connect()
     await db.execute(
