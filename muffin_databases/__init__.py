@@ -3,7 +3,7 @@
 import typing as t
 
 from databases import Database
-from muffin.plugin import BasePlugin
+from muffin.plugins import BasePlugin
 
 
 __version__ = "0.2.5"
