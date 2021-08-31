@@ -56,7 +56,7 @@ async def test_db_sqlite(app, client):
     @app.route(r'/select')
     async def select(request):
         rows = await db.fetch_all('SELECT * from nums')
-        return [dict(row.items()) for row in rows]
+        return [dict(row) for row in rows]
 
     res = await client.get('/select')
     assert res.status_code == 200
@@ -78,7 +78,7 @@ async def test_example_from_readme(app, client):
     async def get_items(request):
         """Return a JSON with items from database."""
         rows = await db.fetch_all('SELECT * from items')
-        return [dict(row.items()) for row in rows]
+        return [dict(row) for row in rows]
 
     @app.route('/items', methods=['POST'])
     async def insert_item(request):

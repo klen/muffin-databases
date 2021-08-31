@@ -18,9 +18,16 @@ class Plugin(BasePlugin):
 
     name = 'databases'
     defaults: t.Dict = {
-        'url': 'sqlite:///:memory:',
         'params': {},
+        'url': 'sqlite:///:memory:',
     }
+
+    def __getattr__(self, name) -> t.Any:
+        """Proxy attributes to self database."""
+        if not self.installed:
+            raise AttributeError(name)
+
+        return getattr(self.__database__, name)
 
     def setup(self, *args, **options):
         """Initialize a database."""
@@ -35,10 +42,3 @@ class Plugin(BasePlugin):
     async def shutdown(self):
         """Disconnect the database."""
         await self.__database__.disconnect()
-
-    def __getattr__(self, name) -> t.Any:
-        """Proxy attributes to self database."""
-        if not self.installed:
-            raise AttributeError(name)
-
-        return getattr(self.__database__, name)
