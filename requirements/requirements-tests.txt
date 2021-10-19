@@ -1,0 +1,4 @@
+aiosqlite
+pytest
+pytest-aio
+pytest-mypy

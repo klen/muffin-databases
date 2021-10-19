@@ -1,11 +1,10 @@
-include AUTHORS.rst
-include Changelog
 include LICENSE
 include MANIFEST.in
 include README.rst
-include requirements.txt
+include CHANGELOG.md
 
 recursive-include muffin_databases *
+recursive-include requirements *.txt
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]

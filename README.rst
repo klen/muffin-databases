@@ -15,6 +15,10 @@ Muffin-Databases
     :target: https://pypi.org/project/muffin-databases/
     :alt: PYPI Version
 
+.. image:: https://img.shields.io/pypi/pyversions/muffin-databases
+    :target: https://pypi.org/project/muffin-databases/
+    :alt: Python Versions
+
 .. _contents:
 
 .. contents::

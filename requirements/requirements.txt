@@ -1,0 +1,3 @@
+muffin      >= 0.86
+databases   >= 0.5.3
+
