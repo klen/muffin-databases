@@ -1,10 +1,10 @@
 """Support databases for Muffin framework."""
 
-import typing as t
+from typing import Any, Mapping
 
-from databases import Database
 from muffin.plugins import BasePlugin
 
+from databases import Database
 
 __version__ = "0.4.0"
 __project__ = "muffin-databases"
@@ -16,18 +16,16 @@ class Plugin(BasePlugin):
 
     """Manage databases connections for Muffin."""
 
-    name = 'databases'
-    defaults: t.Dict = {
-        'params': {},
-        'url': 'sqlite:///:memory:',
+    name = "databases"
+    defaults: Mapping[str, Any] = {
+        "params": {},
+        "url": "sqlite:///:memory:",
     }
 
-    def __getattr__(self, name) -> t.Any:
-        """Proxy attributes to self database."""
-        if not self.installed:
-            raise AttributeError(name)
-
-        return getattr(self.__database__, name)
+    def __init__(self, *args, **kwargs):
+        """Initialize a database."""
+        self.__database__ = None
+        super(Plugin, self).__init__(*args, **kwargs)
 
     def setup(self, *args, **options):
         """Initialize a database."""
@@ -35,10 +33,22 @@ class Plugin(BasePlugin):
 
         self.__database__ = Database(self.cfg.url, **self.cfg.params)
 
+    @property
+    def database(self):
+        """The database property."""
+        if self.__database__ is None:
+            raise RuntimeError("Plugin is not initialized.")
+
+        return self.__database__
+
+    def __getattr__(self, name: str) -> Any:
+        """Proxy attributes to self database."""
+        return getattr(self.database, name)
+
     async def startup(self):
         """Disconnect the database."""
-        await self.__database__.connect()
+        await self.database.connect()
 
     async def shutdown(self):
         """Disconnect the database."""
-        await self.__database__.disconnect()
+        await self.database.disconnect()
