@@ -21,14 +21,11 @@ clean:
 
 VERSION?=minor
 
-.PHONY: version
-version: $(VIRTUAL_ENV)
-	@$(VIRTUAL_ENV)/bin/pip install bump2version
-	@$(VIRTUAL_ENV)/bin/bump2version $(VERSION)
-
 # target: release - Bump version
 .PHONY: release
-release:
+release: $(VIRTUAL_ENV)
+	@$(VIRTUAL_ENV)/bin/pip install bump2version
+	@$(VIRTUAL_ENV)/bin/bump2version $(VERSION)
 	@git checkout master
 	@git merge develop
 	@git checkout develop
