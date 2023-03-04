@@ -1,0 +1,84 @@
+[project]
+name = "muffin-databases"
+version = "0.4.2"
+description = "Async support for a range of databases"
+readme = "README.rst"
+requires-python = ">=3.8"
+license = {"text" = "MIT License"}
+authors = [{ name = "Kirill Klenov", email = "horneds@gmail.com" }]
+keywords = ["sql", "postgres", "mysql", "sqlite", "asyncio", "asgi", "web", "muffin"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Internet :: WWW/HTTP",
+  "Framework :: AsyncIO",
+]
+dependencies = [
+  "muffin >= 0.92",
+  "databases >= 0.5.3",
+]
+
+[project.urls]
+homepage = "https://github.com/klen/muffin-databases"
+repository = "https://github.com/klen/muffin-databases"
+changelog = "https://raw.githubusercontent.com/klen/muffin-databases/master/CHANGELOG.md"
+
+[project.optional-dependencies]
+tests = [
+  "aiosqlite",
+  "pytest",
+  "pytest-aio",
+  "pytest-mypy",
+  "ruff",
+]
+dev = ["pre-commit", "refurb", "bump2version"]
+postgres = ["asyncpg"]
+mysql = ["aiomysql"]
+sqlite = ["aiosqlite"]
+
+[tool.setuptools]
+packages = ['muffin_databases']
+
+[tool.setuptools.package-data]
+muffin_databases = ["py.typed"]
+
+[tool.pytest.ini_options]
+addopts = "-xsv"
+log_cli = true
+
+[tool.mypy]
+packages = ["muffin_databases"]
+install_types = true
+non_interactive = true
+ignore_missing_imports = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py38,py39,py310,py311,pypy39
+
+[testenv]
+deps = -e .[tests]
+commands =
+	pytest --mypy tests.py
+
+[testenv:pypy39]
+deps = -e .[tests]
+commands =
+	pytest tests.py
+"""
+
+[tool.ruff]
+fix = true
+line-length = 100
+target-version = "py38"
+exclude = [".venv", "docs", "examples"]
+select = ["ALL"]
+ignore = ["D", "UP", "ANN", "DJ", "EM", "RSE", "SLF", "RET", "S101", "PLR2004", "PLR0912", "N804", "A003", "TRY003"]

@@ -2,14 +2,8 @@
 
 from typing import Any, Mapping
 
-from muffin.plugins import BasePlugin
-
 from databases import Database
-
-__version__ = "0.4.2"
-__project__ = "muffin-databases"
-__author__ = "Kirill Klenov <horneds@gmail.com>"
-__license__ = "MIT"
+from muffin.plugins import BasePlugin
 
 
 class Plugin(BasePlugin):
