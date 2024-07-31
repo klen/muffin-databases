@@ -28,7 +28,7 @@ Muffin-Databases
 Requirements
 =============
 
-- python >= 3.7
+- python >= 3.9
 
 .. note:: The plugin supports only asyncio evenloop (not trio)
 
@@ -93,12 +93,12 @@ The Muffin-Databases plugin is based on databases_. See the databases_'s docs fo
 Options
 -------
 
-=========================== ======================================= =========================== 
+=========================== ======================================= ===========================
 Name                        Default value                           Desctiption
 --------------------------- --------------------------------------- ---------------------------
 **url**                     ``"sqlite:///db.sqlite"``               A database connection URL
 **params**                  ``{}``                                  A database connection params
-=========================== ======================================= =========================== 
+=========================== ======================================= ===========================
 
 
 You are able to provide the options when you are initiliazing the plugin:
@@ -150,7 +150,7 @@ Licensed under a `MIT license`_.
 .. _klen: https://github.com/klen
 .. _Muffin: https://github.com/klen/muffin
 
-.. _asyncpg: https://github.com/MagicStack/asyncpg 
+.. _asyncpg: https://github.com/MagicStack/asyncpg
 .. _aiomysql: https://aiomysql.readthedocs.io/en/latest/
 .. _aiosqlite: https://github.com/omnilib/aiosqlite
 .. _databases: https://www.encode.io/databases/

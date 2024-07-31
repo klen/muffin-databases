@@ -24,12 +24,17 @@ VERSION?=minor
 # target: release - Bump version
 .PHONY: release
 release: $(VIRTUAL_ENV)
-	@$(VIRTUAL_ENV)/bin/bump2version $(VERSION)
-	@git checkout master
-	@git merge develop
-	@git checkout develop
-	@git push origin develop master
-	@git push --tags
+	git checkout develop
+	git pull
+	git checkout master
+	git merge develop
+	git pull
+	@poetry version $(VERSION)
+	git commit -am "build(release): `poetry version -s`"
+	git tag `poetry version -s`
+	git checkout develop
+	git merge master
+	git push --tags origin develop master
 
 .PHONY: minor
 minor: release
@@ -46,10 +51,11 @@ major:
 #  Development
 # =============
 
-$(VIRTUAL_ENV): pyproject.toml
+$(VIRTUAL_ENV): poetry.lock .pre-commit-config.yaml
 	@[ -d $(VIRTUAL_ENV) ] || python -m venv $(VIRTUAL_ENV)
-	@$(VIRTUAL_ENV)/bin/pip install -e .[tests,dev]
-	@$(VIRTUAL_ENV)/bin/pre-commit install --hook-type pre-push
+	@poetry install --with dev
+	@poetry run pre-commit install
+	@poetry self add poetry-bumpversion
 	@touch $(VIRTUAL_ENV)
 
 .PHONY: test

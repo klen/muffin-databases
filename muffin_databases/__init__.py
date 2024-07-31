@@ -1,6 +1,6 @@
 """Support databases for Muffin framework."""
 
-from typing import Any, Mapping
+from typing import Any, ClassVar
 
 from databases import Database
 from muffin.plugins import BasePlugin
@@ -11,7 +11,7 @@ class Plugin(BasePlugin):
     """Manage databases connections for Muffin."""
 
     name = "databases"
-    defaults: Mapping[str, Any] = {
+    defaults: ClassVar = {
         "params": {},
         "url": "sqlite:///:memory:",
     }
@@ -37,6 +37,9 @@ class Plugin(BasePlugin):
 
     def __getattr__(self, name: str) -> Any:
         """Proxy attributes to self database."""
+        if name in ("startup", "shutdown", "middleware"):
+            return object.__getattribute__(self, name)
+
         return getattr(self.database, name)
 
     async def startup(self):
