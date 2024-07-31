@@ -26,6 +26,9 @@ repository = "https://github.com/klen/muffin-databases"
 python = "^3.9"
 muffin = "*"
 databases = "*"
+asyncpg = { version = "*", optional = true }
+aiomysql = { version = "*", optional = true }
+aiosqlite = { version = "*", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 aiosqlite = "*"
@@ -35,14 +38,10 @@ pytest-mypy = "*"
 ruff = "*"
 pre-commit = "*"
 
-[tool.poetry.group.postgres.dependencies]
-asyncpg = "*"
-
-[tool.poetry.group.mysql.dependencies]
-aiomysql = "*"
-
-[tool.poetry.group.sqlite.dependencies]
-aiosqlite = "*"
+[tool.poetry.extras]
+postgres = ["asyncpg"]
+mysql = ["aiomysql"]
+sqlite = ["aiosqlite"]
 
 [tool.pytest.ini_options]
 addopts = "-xsv tests.py"
