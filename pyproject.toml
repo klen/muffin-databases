@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "muffin-databases"
-version = "0.6.1"
+version = "0.6.2"
 description = "Async support for a range of databases"
 readme = "README.rst"
 license = "MIT"
