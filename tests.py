@@ -17,6 +17,7 @@ def test_plugin():
     from muffin_databases import Plugin
 
     db = Plugin(url="sqlite:///:memory:", params={"force_rollback": True})
+    assert not hasattr(db, "middleware")
 
     with pytest.raises(RuntimeError):
         db.unknown
@@ -73,7 +74,7 @@ async def test_example_from_readme(app, client):
 
     await db.connect()
     await db.execute(
-        "create table items (id integer primary key, name varchar(100), value integer)"
+        "create table items (id integer primary key, name varchar(100), value integer)",
     )
 
     @app.route("/items", methods=["GET"])
@@ -87,12 +88,14 @@ async def test_example_from_readme(app, client):
         """Store an item into database."""
         data = await request.data()  # parse formdata/json from the request
         await db.execute_many(
-            "INSERT INTO items (name, value) VALUES (:name, :value)", values=data
+            "INSERT INTO items (name, value) VALUES (:name, :value)",
+            values=data,
         )
         return "OK"
 
     res = await client.post(
-        "/items", json=[{"name": "test1", "value": 11}, {"name": "test2", "value": 22}]
+        "/items",
+        json=[{"name": "test1", "value": 11}, {"name": "test2", "value": 22}],
     )
     assert res.status_code == 200
 

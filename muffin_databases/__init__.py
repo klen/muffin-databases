@@ -37,7 +37,7 @@ class Plugin(BasePlugin):
 
     def __getattr__(self, name: str) -> Any:
         """Proxy attributes to self database."""
-        if name in ("startup", "shutdown", "middleware"):
+        if name == "middleware":
             return object.__getattribute__(self, name)
 
         return getattr(self.database, name)
