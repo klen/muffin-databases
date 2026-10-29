@@ -19,10 +19,10 @@ jobs:
         python-version: ["3.11", "3.12", "3.13", "3.14", "3.15"]
 
     steps:
-      - uses: actions/checkout@main
+      - uses: actions/checkout@v7
 
       - name: Install uv
-        uses: astral-sh/setup-uv@main
+        uses: astral-sh/setup-uv@v10
         with:
           enable-cache: true
           python-version: ${{ matrix.python-version }}
@@ -44,7 +44,7 @@ jobs:
     needs: tests
     steps:
       - name: Notify Success
-        uses: archive/github-actions-slack@master
+        uses: archive/github-actions-slack@433fef9978d3adae73168bfc9c5a7ce722780231
         with:
           slack-channel: C2CRL4C4V
           slack-text: "*[${{ github.repository }}]* tests are passed *(${{ github.ref }})* https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

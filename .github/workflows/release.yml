@@ -1,20 +1,22 @@
 name: release
 
 on:
-  workflow_run:
-    workflows: [tests]
-    branches: [master]
-    types: [completed]
+  push:
+    tags: ["*.*.*"]
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success'
     steps:
-      - uses: actions/checkout@main
-      - uses: astral-sh/setup-uv@main
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           enable-cache: true
+
+      - name: Test
+        run: |
+          uv sync --locked --all-extras --dev
+          uv run pytest
 
       - name: Build Package
         run: |
@@ -26,7 +28,7 @@ jobs:
     needs: release
     steps:
       - name: Notify Success
-        uses: archive/github-actions-slack@master
+        uses: archive/github-actions-slack@433fef9978d3adae73168bfc9c5a7ce722780231
         with:
           slack-channel: C2CRL4C4V
           slack-text: "*[${{ github.repository }}]* build is success *(${{ github.ref }})* https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
