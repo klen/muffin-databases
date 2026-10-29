@@ -28,9 +28,9 @@ Muffin-Databases
 Requirements
 =============
 
-- python >= 3.9
+- python >= 3.11
 
-.. note:: The plugin supports only asyncio evenloop (not trio)
+.. note:: The plugin supports only asyncio event loop (not trio)
 
 .. _installation:
 
@@ -78,7 +78,7 @@ That's it now you are able to use the plugin inside your views:
     async def get_items(request):
         """Return a JSON with items from database."""
         rows = await db.fetch_all('SELECT * from items')
-        return [dict(row.items()) for row in rows]
+        return [dict(row) for row in rows]
 
     @app.route('/items', methods=['POST'])
     async def insert_item(request):
@@ -90,15 +90,31 @@ That's it now you are able to use the plugin inside your views:
 The Muffin-Databases plugin is based on databases_. See the databases_'s docs for further references.
 
 
+Public API
+----------
+
+**db.database** -- the underlying ``databases.Database`` instance. Raises ``RuntimeError`` if the
+plugin is not initialized.
+
+Any unknown attribute is proxied to ``db.database``, so the whole databases_ API is available
+directly on the plugin: ``await db.fetch_all(...)``, ``await db.fetch_one(...)``,
+``db.transaction()``, ``await db.execute_many(...)`` and so on.
+
+The plugin manages the connection for you: on application startup it calls ``database.connect()``,
+on shutdown it calls ``database.disconnect()``.
+
+
 Options
 -------
 
 =========================== ======================================= ===========================
-Name                        Default value                           Desctiption
+Name                        Default value                           Description
 --------------------------- --------------------------------------- ---------------------------
-**url**                     ``"sqlite:///db.sqlite"``               A database connection URL
+**url**                     ``"sqlite:///:memory:"``                A database connection URL
 **params**                  ``{}``                                  A database connection params
 =========================== ======================================= ===========================
+
+Unknown options are ignored.
 
 
 You are able to provide the options when you are initiliazing the plugin:
@@ -114,6 +130,11 @@ Or setup it from ``Muffin.Application`` configuration using the ``DATABASES_`` p
    DATABASES_URL = 'postgresql://localhost/example'
 
 ``Muffin.Application`` configuration options are case insensitive
+
+Environment variables use the ``{APP_NAME}_DATABASES_`` prefix (the default application name is
+``muffin``): ::
+
+    $ export MUFFIN_DATABASES_URL='postgresql://localhost/example'
 
 .. _bugtracker:
 
