@@ -43,7 +43,6 @@ dev = [
   "ruff",
   "pyrefly",
   "pre-commit",
-  "tox",
 ]
 example = ["uvicorn"]
 
@@ -65,18 +64,6 @@ log_cli = true
 [tool.pyrefly]
 project-includes = ["muffin_databases"]
 project-excludes = ["tests.py", "example.py", "pyproject.toml"]
-
-[tool.tox]
-legacy_tox_ini = """
-[tox]
-envlist = py311,py312,py313,py314,py315,pypy311
-
-[testenv]
-allowlist_externals = uv,pytest
-commands =
-  uv pip install --system -e .[dev]
-	pytest tests.py
-"""
 
 [tool.ruff]
 line-length = 100
