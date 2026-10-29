@@ -23,6 +23,37 @@ def test_plugin():
         _ = db.unknown
 
 
+async def test_lifespan(app):
+    from muffin_databases import Plugin
+
+    db = Plugin(app, url="sqlite:///:memory:", params={"force_rollback": True})
+
+    async with app.lifespan:
+        assert db.database.is_connected
+
+    assert not db.database.is_connected
+
+
+def test_config_from_app():
+    from muffin_databases import Plugin
+
+    app = muffin.Application(debug=True, DATABASES_URL="sqlite:///from-app.sqlite")
+    db = Plugin(app)
+    assert db.cfg.url == "sqlite:///from-app.sqlite"
+
+
+async def test_setup_connected(app):
+    from muffin_databases import Plugin
+
+    db = Plugin(app, url="sqlite:///:memory:", params={"force_rollback": True})
+    await db.startup()
+
+    with pytest.raises(RuntimeError):
+        db.setup(app, url="sqlite:///:memory:")
+
+    await db.shutdown()
+
+
 async def test_db_sqlite(app, client):
     from muffin_databases import Plugin
 

@@ -25,6 +25,9 @@ class Plugin(BasePlugin):
         """Initialize a database."""
         res = super(Plugin, self).setup(app, name=name, **options)
 
+        if self.__database__ is not None and self.__database__.is_connected:
+            raise RuntimeError("Database is connected; disconnect it before setup().")
+
         self.__database__ = Database(self.cfg.url, **self.cfg.params)
         return res
 
