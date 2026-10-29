@@ -1,10 +1,11 @@
-[tool.poetry]
+[project]
 name = "muffin-databases"
 version = "0.6.2"
-description = "Async support for a range of databases"
+description = "Async support for a range of databases for Muffin framework"
+authors = [{ name = "Kirill Klenov", email = "horneds@gmail.com" }]
+requires-python = ">=3.11,<4"
 readme = "README.rst"
 license = "MIT"
-authors = ["Kirill Klenov <horneds@gmail.com>"]
 keywords = ["sql", "postgres", "mysql", "sqlite", "asyncio", "asgi", "web", "muffin"]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -12,89 +13,109 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
   "Topic :: Internet :: WWW/HTTP",
   "Framework :: AsyncIO",
 ]
-homepage = "https://github.com/klen/muffin-databases"
-repository = "https://github.com/klen/muffin-databases"
+dependencies = [
+  "databases",
+  "muffin",
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-muffin = "*"
-databases = "*"
-asyncpg = { version = "*", optional = true }
-aiomysql = { version = "*", optional = true }
-aiosqlite = { version = "*", optional = true }
-
-[tool.poetry.group.dev.dependencies]
-aiosqlite = "*"
-pytest = "*"
-pytest-aio = "*"
-pytest-mypy = "*"
-ruff = "*"
-pre-commit = "*"
-
-[tool.poetry.extras]
+[project.optional-dependencies]
+sqlite = ["aiosqlite"]
 postgres = ["asyncpg"]
 mysql = ["aiomysql"]
-sqlite = ["aiosqlite"]
+
+[project.urls]
+Homepage = "https://github.com/klen/muffin-databases"
+Repository = "https://github.com/klen/muffin-databases"
+
+[dependency-groups]
+dev = [
+  "aiosqlite",
+  "pytest",
+  "pytest-aio[curio, trio]",
+  "ruff",
+  "pyrefly",
+  "pre-commit",
+  "tox",
+]
+example = ["uvicorn"]
+
+[tool.uv]
+default-groups = ["dev", "example"]
+
+[build-system]
+requires = ["uv_build>=0.9.7,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "muffin_databases"
+module-root = ""
 
 [tool.pytest.ini_options]
 addopts = "-xsv tests.py"
 log_cli = true
 
-[tool.mypy]
-packages = ["muffin_databases"]
-install_types = true
-non_interactive = true
-ignore_missing_imports = true
-check_untyped_defs = true
+[tool.pyrefly]
+project-includes = ["muffin_databases"]
+project-excludes = ["tests.py", "example.py", "pyproject.toml"]
 
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py39,py310,py311,py312,pypy39
+envlist = py311,py312,py313,py314,py315,pypy311
 
 [testenv]
-deps = -e .[tests]
+allowlist_externals = uv,pytest
 commands =
-	pytest --mypy tests.py
-
-[testenv:pypy39]
-deps = -e .[tests]
-commands =
+  uv pip install --system -e .[dev]
 	pytest tests.py
 """
 
 [tool.ruff]
-fix = true
 line-length = 100
-target-version = "py39"
+target-version = "py311"
 exclude = [".venv", "docs", "examples"]
 
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-  "D",
-  "UP",
+  "A003",
   "ANN",
+  "ARG",
+  "COM",
+  "CPY001",
+  "D",
   "DJ",
   "EM",
-  "RSE",
-  "SLF",
-  "RET",
-  "S101",
-  "PLR2004",
+  "FA100",
+  "FIX",
+  "N",
+  "PLC0415",
   "PLR0912",
-  "N804",
-  "A003",
+  "PLR2004",
+  "RET",
+  "RSE",
+  "RUF012",
+  "S101",
+  "SLF",
+  "TD",
   "TRY003",
+  "UP",
 ]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.bumpversion]
+current_version = "0.6.2"
+commit = false
+tag = false
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'

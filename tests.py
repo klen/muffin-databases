@@ -17,10 +17,10 @@ def test_plugin():
     from muffin_databases import Plugin
 
     db = Plugin(url="sqlite:///:memory:", params={"force_rollback": True})
-    assert not hasattr(db, "middleware")
+    assert db.middleware is None
 
     with pytest.raises(RuntimeError):
-        db.unknown
+        _ = db.unknown
 
 
 async def test_db_sqlite(app, client):
@@ -45,7 +45,7 @@ async def test_db_sqlite(app, client):
     @app.route(r"/insert/{num:int}")
     async def insert(request):
         num = request.path_params["num"]
-        return await db.execute(f"insert into nums (value) values ({num})")
+        return await db.execute("insert into nums (value) values (:num)", {"num": num})
 
     res = await client.get("/insert/10")
     assert res.status_code == 200
