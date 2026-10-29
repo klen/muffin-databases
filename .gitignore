@@ -41,5 +41,12 @@ output/*/index.html
 # Sphinx
 docs/_build
 
+# Documentation site
+site
+
+/.venv
+/env
+*.sqlite
+
 /.ropeproject
 /.cache

@@ -3,11 +3,11 @@
 from typing import Any, ClassVar
 
 from databases import Database
+from muffin import Application
 from muffin.plugins import BasePlugin
 
 
 class Plugin(BasePlugin):
-
     """Manage databases connections for Muffin."""
 
     name = "databases"
@@ -18,14 +18,15 @@ class Plugin(BasePlugin):
 
     def __init__(self, *args, **kwargs):
         """Initialize a database."""
-        self.__database__ = None
+        self.__database__: Database | None = None
         super(Plugin, self).__init__(*args, **kwargs)
 
-    def setup(self, *args, **options):
+    def setup(self, app: Application, *, name: str | None = None, **options) -> bool:
         """Initialize a database."""
-        super(Plugin, self).setup(*args, **options)
+        res = super(Plugin, self).setup(app, name=name, **options)
 
         self.__database__ = Database(self.cfg.url, **self.cfg.params)
+        return res
 
     @property
     def database(self):
